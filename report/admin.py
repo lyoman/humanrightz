@@ -1,5 +1,5 @@
 from django.contrib import admin
-from . models import ReportedCase, CompanyDetail
+from . models import ReportedCase, CompanyDetail, Victim
 
 # Register your models here.
 class ReportedCaseModelAdmin(admin.ModelAdmin):
@@ -9,12 +9,6 @@ class ReportedCaseModelAdmin(admin.ModelAdmin):
         "date_reported", 
         "type_of_violation", 
         "description_of_victims", 
-        "names_of_vitims", 
-        "victim_age", 
-        "victim_gender", 
-        "describe_gender", 
-        "victim_phone_number",
-        "victim_address", 
         "description_of_perpetrator", 
         "motivations_behind_incident", 
         "what_happened", 
@@ -53,6 +47,8 @@ class CompanyDetailModelAdmin(admin.ModelAdmin):
     class Meta:
         model = CompanyDetail
 
-
+@admin.register(Victim)
+class VictimAdmin(admin.ModelAdmin):
+    list_display = ('case', "name")
 admin.site.register(ReportedCase, ReportedCaseModelAdmin)
 admin.site.register(CompanyDetail, CompanyDetailModelAdmin)

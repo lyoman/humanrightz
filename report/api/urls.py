@@ -14,6 +14,8 @@ from .views import (
     CompanyDetailUpdateAPIView,
     CompanyDetailCreateAPIView,
     CompanyDetailUserListAPIView,
+
+    CasesView
 	)
 
 urlpatterns = [
@@ -30,5 +32,8 @@ urlpatterns = [
     path('company/<int:id>/detail/', CompanyDetailDetailAPIView.as_view(), name='company_detail'),
     path('company/<int:id>/edit/', CompanyDetailUpdateAPIView.as_view(), name='update_company'),
     path('company/<int:id>/delete/', CompanyDetailDeleteAPIView.as_view(), name="delete_company"),
+
+    # new url
+    path('cases/', CasesView.as_view(), name='case'),
 
 ]

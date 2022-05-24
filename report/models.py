@@ -1,7 +1,10 @@
+from statistics import mode
 from django.utils import timezone
 from django.contrib.auth.models import Permission
 from django.db import models
 from django.conf import settings
+from django.contrib.postgres.fields import ArrayField
+from django.utils.translation import gettext_lazy as _
 
 VIOLATION_TYPE = (
     ("Forced Displacement", "Forced Displacement"),
@@ -78,41 +81,43 @@ class CompanyDetail(models.Model):
         
 
 class ReportedCase(models.Model):
-    user           = models.ForeignKey(settings.AUTH_USER_MODEL, default=1, on_delete = models.CASCADE)
-    date_reported  = models.DateTimeField(auto_now=False, auto_now_add=False)
-    
+    user           = models.ForeignKey(settings.AUTH_USER_MODEL, default=1, on_delete = models.CASCADE, blank=True, null=True)
+    date_reported  = models.DateTimeField(auto_now=False, auto_now_add=False, blank=True, null=True)
     company        = models.ForeignKey(CompanyDetail, default=1, on_delete = models.CASCADE, null=True, blank=True)
-    type_of_violation      = models.CharField(max_length=250, choices=VIOLATION_TYPE)
-    description_of_victims = models.CharField(max_length=250, choices=VICTIMS_DESCRIPTION)
-    names_of_vitims        = models.CharField(max_length=250, null=False, blank=False)
-    victim_age                = models.CharField(max_length=250, null=False, blank=False)
-    victim_gender             = models.CharField(max_length=250, choices=VICTIMS_GENDER)
-    describe_gender           = models.CharField(max_length=250, null=True, blank=True)
-    victim_phone_number       = models.CharField(max_length=250, null=False, blank=False)
-    victim_address            = models.CharField(max_length=250, null=False, blank=False)
-    
-    description_of_perpetrator = models.CharField(max_length=250, choices=PERPETRATOR_DESCRIPTION)
-    motivations_behind_incident = models.CharField(max_length=250, choices=MOTIVATIONS_BEHIND)
+    type_of_violation      = models.CharField(max_length=250, choices=VIOLATION_TYPE, blank=True, null=True)
+    description_of_victims = models.CharField(max_length=250, choices=VICTIMS_DESCRIPTION, blank=True, null=True)
+    description_of_perpetrator = models.CharField(max_length=250, choices=PERPETRATOR_DESCRIPTION, blank=True, null=True)
+    motivations_behind_incident = models.CharField(max_length=250, choices=MOTIVATIONS_BEHIND, blank=True, null=True)
     what_happened    = models.TextField(blank = True)
     how_it_happened  = models.TextField(blank = True)
-    evidence_files   = models.ImageField(upload_to = 'transpired_description/')
-    
+    experiment = models.JSONField(default=dict)
+    evidence_files   = models.ImageField(upload_to = 'transpired_description/', blank=True, null=True)
     community_description = models.TextField(blank = True)
-    location       = models.CharField(max_length=250, null=False, blank=False)
-    latitude       = models.DecimalField(max_digits=6, decimal_places=2)
-    longitude      = models.DecimalField(max_digits=6, decimal_places=2)
-    
-    
-    identity_verification = models.FileField(upload_to = 'identity_verification/')
+    location       = models.CharField(max_length=250, blank=True, null=True)
+    latitude       = models.DecimalField(max_digits=22, decimal_places=16, blank=True, null=True)
+    longitude      = models.DecimalField(max_digits=22, decimal_places=16, blank=True, null=True)
+    identity_verification = models.FileField(upload_to = 'identity_verification/', blank=True, null=True)
     # file_field     = models.FileField(widget=models.ClearableFileInput(attrs={'multiple': True}))
-    
     active         = models.BooleanField(default=True)
     read_status    = models.BooleanField(default=False)
     updated        = models.DateTimeField(auto_now=True, auto_now_add=False)
     timestamp      = models.DateTimeField(auto_now=False, auto_now_add=True)
 
     def __str__(self):
-        return self.names_of_vitims
+        return self.type_of_violation
 
     class Meta:
         ordering = ["-timestamp", "-updated"]
+
+
+class Victim(models.Model):
+    case = models.ForeignKey("report.ReportedCase", related_name="victims", on_delete=models.CASCADE)
+    name = models.CharField(_("Victim name"), max_length=200)
+    address = models.CharField(_("Victim address"), max_length=200)
+    phone =  models.CharField(_("Phone"), max_length=13)
+
+    def __str__(self):
+        return self.name
+
+
+

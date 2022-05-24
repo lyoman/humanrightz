@@ -6,8 +6,9 @@ from rest_framework.serializers import (
 
 from accounts.api.serializers import UserDetailSerializer
 # from medicine.api.serializers import ProductSerializer
-from report.models import ReportedCase, CompanyDetail
+from report.models import ReportedCase, CompanyDetail, Victim
 # from .serializers import PostSerializer
+from rest_framework import serializers
 from rest_framework.serializers import ModelSerializer
 # from rest_framework import serializers
 from django.db import models
@@ -20,7 +21,13 @@ def user_directory_path(instance, filename):
     return 'user_{0}/{1}'.format(instance.user.id, filename)
 
 
+class VictimSerializer(ModelSerializer):
+    class Meta:
+        model = Victim
+        fields = ("name", "phone", "address")
+
 class ReportedCaseCreateUpdateSerializer(ModelSerializer):
+    victims = serializers.SerializerMethodField()
     user 		    = models.ForeignKey(settings.AUTH_USER_MODEL, default=1, on_delete = models.CASCADE)
     # invoice        = models.ImageField(upload_to = user_directory_path)
 
@@ -28,17 +35,13 @@ class ReportedCaseCreateUpdateSerializer(ModelSerializer):
         model = ReportedCase
         fields = [
             'id',
+            'victims',
+            'experiment',
             'user',
             'company',
             "date_reported", 
             "type_of_violation", 
             "description_of_victims", 
-            "names_of_vitims", 
-            "victim_age", 
-            "victim_gender", 
-            "describe_gender", 
-            "victim_phone_number",
-            "victim_address", 
             "description_of_perpetrator", 
             "motivations_behind_incident", 
             "what_happened", 
@@ -50,6 +53,10 @@ class ReportedCaseCreateUpdateSerializer(ModelSerializer):
             "longitude",
             "identity_verification", 
         ]
+
+    def get_victims(self, case):
+        vctms = case.victims.all()
+        return VictimSerializer(instance=vctms, many=True).data
 
 
 reportcase_detail_url = HyperlinkedIdentityField(
@@ -71,12 +78,12 @@ class ReportedCaseDetailSerializer(ModelSerializer):
             'company',
             "type_of_violation", 
             "description_of_victims", 
-            "names_of_vitims", 
-            "victim_age", 
-            "victim_gender", 
-            "describe_gender", 
-            "victim_phone_number",
-            "victim_address", 
+            # "names_of_vitims", 
+            # "victim_age", 
+            # "victim_gender", 
+            # "describe_gender", 
+            # "victim_phone_number",
+            # "victim_address", 
             "description_of_perpetrator", 
             "motivations_behind_incident", 
             "what_happened", 
@@ -92,8 +99,9 @@ class ReportedCaseDetailSerializer(ModelSerializer):
             'timestamp'
         ]
 
-class ReportedCaseListSerializer(ModelSerializer):
+class ReportedCaseListSerializer(serializers.ModelSerializer):
     url = reportcase_detail_url
+    victims = VictimSerializer(many=True)
     user    =   UserDetailSerializer(read_only=True)
     delete_url = HyperlinkedIdentityField(
         view_name='reportcase-api:delete',
@@ -102,6 +110,8 @@ class ReportedCaseListSerializer(ModelSerializer):
     class Meta:
         model = ReportedCase
         fields = [
+            "victims",
+            "experiment",
             'url',
             'user',
             'id',
@@ -110,12 +120,12 @@ class ReportedCaseListSerializer(ModelSerializer):
             "date_reported", 
             "type_of_violation", 
             "description_of_victims", 
-            "names_of_vitims", 
-            "victim_age", 
-            "victim_gender", 
-            "describe_gender", 
-            "victim_phone_number",
-            "victim_address", 
+            # "names_of_vitims", 
+            # "victim_age", 
+            # "victim_gender", 
+            # "describe_gender", 
+            # "victim_phone_number",
+            # "victim_address", 
             "description_of_perpetrator", 
             "motivations_behind_incident", 
             "what_happened", 
@@ -130,6 +140,22 @@ class ReportedCaseListSerializer(ModelSerializer):
             'updated',
             'timestamp'
         ]
+
+        
+    def get_victims(self, case):
+            vctms = case.victims.all()
+            return VictimSerializer(instance=vctms, many=True).data
+
+
+
+# def create(self, validated_data):
+#     user = self.context.get('user') #you can pass context={'user': self.request.user} in your view to the serializer
+#     up = ReportedCase.objects.create(email_id=user)
+#     up.save()        
+#     preference = validated_data.get('preference', [])
+#     up.preference.add(*preference)
+#     up.save()
+#     return up
 
 
 #####Process flow Charts
