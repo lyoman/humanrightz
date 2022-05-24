@@ -1,5 +1,5 @@
 from django.contrib import admin
-from . models import ReportedCase, CompanyDetail
+from . models import ReportedCase, CompanyDetail, MediaFile
 
 # Register your models here.
 class ReportedCaseModelAdmin(admin.ModelAdmin):
@@ -104,8 +104,25 @@ class CompanyDetailModelAdmin(admin.ModelAdmin):
     class Meta:
         model = CompanyDetail
 
+
+class MediaFileModelAdmin(admin.ModelAdmin):
+    list_display        = [
+                           "name", 
+                           "file", 
+                           "type", 
+                           "timestamp", 
+                           "updated"
+                           ]
+    list_display_links  = ["updated", "timestamp", "name"]
+    list_editable       = ["file"]
+    list_filter         = ["updated", "timestamp"]
+    search_fields       = ["description"]
+    class Meta:
+        model = MediaFile
+
 # @admin.register(Victim)
 # class VictimAdmin(admin.ModelAdmin):
 #     list_display = ('case', "name")
 admin.site.register(ReportedCase, ReportedCaseModelAdmin)
 admin.site.register(CompanyDetail, CompanyDetailModelAdmin)
+admin.site.register(MediaFile, MediaFileModelAdmin)

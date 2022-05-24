@@ -1,7 +1,7 @@
 from psycopg2 import Timestamp
 from rest_framework.generics import ListAPIView
 
-from report.models import ReportedCase, CompanyDetail
+from report.models import ReportedCase, CompanyDetail, MediaFile
 # from .serializers import ReportedCaseSerializer
 
 from django.db.models import Q
@@ -30,6 +30,8 @@ from .serializers import (
     CompanyDetailListSerializer,
     CompanyDetailDetailSerializer, 
     CompanyDetailCreateUpdateSerializer,
+
+    MediaFileCreateUpdateSerializer
     )
 
 from rest_framework.permissions import (
@@ -82,6 +84,13 @@ from rest_framework.permissions import (
 #           except Exception as e:
 #               break
 #         return JsonResponse({"success": True})
+
+class MediaFileCreateAPIView(CreateAPIView):
+    queryset = MediaFile.objects.all()
+    serializer_class = MediaFileCreateUpdateSerializer 
+    # lookup_field = 'id'
+    # permission_classes = [IsAuthenticated]
+    permission_classes = [AllowAny]
 
 #Creating an Ambulance
 class ReportedCaseCreateAPIView(CreateAPIView):

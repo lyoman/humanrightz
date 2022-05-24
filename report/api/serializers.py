@@ -6,7 +6,7 @@ from rest_framework.serializers import (
 
 from accounts.api.serializers import UserDetailSerializer
 # from medicine.api.serializers import ProductSerializer
-from report.models import ReportedCase, CompanyDetail
+from report.models import ReportedCase, CompanyDetail, MediaFile
 # from .serializers import PostSerializer
 from rest_framework import serializers
 from rest_framework.serializers import ModelSerializer
@@ -350,4 +350,15 @@ class CompanyDetailListSerializer(ModelSerializer):
             'active',
             'updated',
             'timestamp'
+        ]
+
+
+
+class MediaFileCreateUpdateSerializer(ModelSerializer):
+    class Meta:
+        model = MediaFile
+        fields = [
+        'name',
+        "file",
+        "type", 
         ]

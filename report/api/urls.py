@@ -15,6 +15,8 @@ from .views import (
     CompanyDetailCreateAPIView,
     CompanyDetailUserListAPIView,
 
+    MediaFileCreateAPIView
+
     # CasesView
 	)
 
@@ -35,5 +37,6 @@ urlpatterns = [
 
     # new url
     # path('cases/', CasesView.as_view(), name='case'),
+    path('add_files/', MediaFileCreateAPIView.as_view(), name='new_file'),
 
 ]

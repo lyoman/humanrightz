@@ -80,6 +80,22 @@ class CompanyDetail(models.Model):
 
     class Meta:
         ordering = ["-timestamp", "-updated"]
+
+
+class MediaFile(models.Model):
+    # evidence_files   = models.ImageField(upload_to = 'transpired_description/', blank=True, null=True)
+    # identity_verification = models.FileField(upload_to = 'identity_verification/', blank=True, null=True)
+    file = models.FileField(_("The actual file"), upload_to = 'evidence_files/', blank=True, null=True)
+    name       = models.CharField(max_length=250, null=False, blank=False)
+    type       = models.CharField(max_length=250, null=False, blank=False)
+    updated    = models.DateTimeField(auto_now=True, auto_now_add=False)
+    timestamp  = models.DateTimeField(auto_now=False, auto_now_add=True)
+
+    def __str__(self):
+        return self.name + ' - ' + self.type
+
+    class Meta:
+        ordering = ["-timestamp", "-updated"]
         
 
 class ReportedCase(models.Model):
