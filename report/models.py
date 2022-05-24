@@ -83,12 +83,10 @@ class CompanyDetail(models.Model):
         
 
 class ReportedCase(models.Model):
-    evidence_files   = models.ImageField(upload_to = 'transpired_description/', blank=True, null=True)
-    identity_verification = models.FileField(upload_to = 'identity_verification/', blank=True, null=True)
     # file_field     = models.FileField(widget=models.ClearableFileInput(attrs={'multiple': True}))
 
     date_reported= models.DateTimeField(auto_now=False, auto_now_add=False, blank=True, null=True)
-    type_of_violation      = models.CharField(max_length=250, choices=VIOLATION_TYPE, blank=True, null=True)
+    type_of_violation      = models.CharField(_("Type of violation"),max_length=250, choices=VIOLATION_TYPE, blank=True, null=True)
 
     #  // Forced Displacement
     fd_how_many_removed= models.CharField(max_length=250, blank=True, null=True)
@@ -169,8 +167,11 @@ class ReportedCase(models.Model):
     longitude      = models.DecimalField(max_digits=22, decimal_places=16, blank=True, null=True)
 
     # //Array
-    collection_vp = models.JSONField(default=dict)
-    media_files = models.JSONField(default=dict)
+    collection_vp = models.JSONField(default=dict, blank=True, null=True)
+    media_files = models.JSONField(default=dict, blank=True, null=True)
+
+    evidence_files   = models.ImageField(upload_to = 'transpired_description/', blank=True, null=True)
+    identity_verification = models.FileField(upload_to = 'identity_verification/', blank=True, null=True)
 
 
     active         = models.BooleanField(default=True)
