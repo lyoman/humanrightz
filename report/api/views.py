@@ -43,45 +43,45 @@ from rest_framework.permissions import (
 #     queryset = store.objects.all()
 #     serializer_class = storeSerializer
 
-from django.http import JsonResponse
-from rest_framework.views import APIView
-from report.models import Victim, ReportedCase
-from rest_framework.response import Response
-from rest_framework import permissions, status
-class CasesView(APIView):
-    permission_classes = [AllowAny]
-    def get(self, request):
-        cases = ReportedCase.objects.all()
-        # objs = ReportedCaseListSerializer(cases, many=True).data
-        # serializer = ReportedCaseListSerializer(data=request.data,context={'request': request})
-        context_serializer = {
-            'request': request
-        }
-        # return Response(objs, status=status.HTTP_200_OK, context=context_serializer)
-        serializer = ReportedCaseListSerializer(cases, context=context_serializer)    
-        return Response(serializer.data)
+# from django.http import JsonResponse
+# from rest_framework.views import APIView
+# from report.models import Victim, ReportedCase
+# from rest_framework.response import Response
+# from rest_framework import permissions, status
+# class CasesView(APIView):
+#     permission_classes = [AllowAny]
+#     def get(self, request):
+#         cases = ReportedCase.objects.all()
+#         # objs = ReportedCaseListSerializer(cases, many=True).data
+#         # serializer = ReportedCaseListSerializer(data=request.data,context={'request': request})
+#         context_serializer = {
+#             'request': request
+#         }
+#         # return Response(objs, status=status.HTTP_200_OK, context=context_serializer)
+#         serializer = ReportedCaseListSerializer(cases, context=context_serializer)    
+#         return Response(serializer.data)
         
-    def post(self, request):
-        location = request.data["location"]
-        type_of_violation = request.data["type_of_violation"]
-        print(request.data)
-        case = ReportedCase(
-            location = location,
-            type_of_violation = type_of_violation
-        )
-        case.save()
+#     def post(self, request):
+#         location = request.data["location"]
+#         type_of_violation = request.data["type_of_violation"]
+#         print(request.data)
+#         case = ReportedCase(
+#             location = location,
+#             type_of_violation = type_of_violation
+#         )
+#         case.save()
 
-        for i in range(0, 100):
-          try:
-                victim_name = request.data[f"victim_name_{i}"]
-                victim = Victim(
-                    name = victim_name,
-                    case=case
-                )
-                victim.save()
-          except Exception as e:
-              break
-        return JsonResponse({"success": True})
+#         for i in range(0, 100):
+#           try:
+#                 victim_name = request.data[f"victim_name_{i}"]
+#                 victim = Victim(
+#                     name = victim_name,
+#                     case=case
+#                 )
+#                 victim.save()
+#           except Exception as e:
+#               break
+#         return JsonResponse({"success": True})
 
 #Creating an Ambulance
 class ReportedCaseCreateAPIView(CreateAPIView):
@@ -118,22 +118,17 @@ class ReportedCaseDetailAPIView(RetrieveAPIView):
 class ReportedCaseListAPIView(ListAPIView):
     serializer_class = ReportedCaseListSerializer
     filter_backends = [SearchFilter, OrderingFilter]
-    search_fields = ['name']
+    search_fields = ['type_of_violation']
     pagination_class = ReportedCasePageNumberPagination
     permission_classes = [AllowAny]
 
     def get_queryset(self):
         queryset = ReportedCase.objects.filter(active=True)
-        fromDate = self.request.query_params.get('fromDate',None)
-        toDate = self.request.query_params.get('toDate',None)
-        response  = ReportedCase.objects.filter(type_of_violation=fromDate,read_status=toDate, active=True)
         id = self.request.query_params.get('user', None)
         if id is not None:
-            queryset = response.filter(user_id=id)
+            queryset = queryset.filter(type_of_violation=id)
             print("hey you", queryset)
         return queryset
-
-
 
 #Creating an CompanyDetail
 class CompanyDetailCreateAPIView(CreateAPIView):

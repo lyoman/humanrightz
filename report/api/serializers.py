@@ -6,7 +6,7 @@ from rest_framework.serializers import (
 
 from accounts.api.serializers import UserDetailSerializer
 # from medicine.api.serializers import ProductSerializer
-from report.models import ReportedCase, CompanyDetail, Victim
+from report.models import ReportedCase, CompanyDetail
 # from .serializers import PostSerializer
 from rest_framework import serializers
 from rest_framework.serializers import ModelSerializer
@@ -21,42 +21,86 @@ def user_directory_path(instance, filename):
     return 'user_{0}/{1}'.format(instance.user.id, filename)
 
 
-class VictimSerializer(ModelSerializer):
-    class Meta:
-        model = Victim
-        fields = ("name", "phone", "address")
+# class VictimSerializer(ModelSerializer):
+#     class Meta:
+#         model = Victim
+#         fields = ("name", "phone", "address")
 
 class ReportedCaseCreateUpdateSerializer(ModelSerializer):
-    victims = serializers.SerializerMethodField()
-    user 		    = models.ForeignKey(settings.AUTH_USER_MODEL, default=1, on_delete = models.CASCADE)
-    # invoice        = models.ImageField(upload_to = user_directory_path)
-
     class Meta:
         model = ReportedCase
         fields = [
-            'id',
-            'victims',
-            'experiment',
-            'user',
-            'company',
-            "date_reported", 
-            "type_of_violation", 
-            "description_of_victims", 
-            "description_of_perpetrator", 
-            "motivations_behind_incident", 
-            "what_happened", 
-            "how_it_happened",
-            "community_description",
-            "evidence_files", 
-            "location",
-            "latitude", 
-            "longitude",
-            "identity_verification", 
-        ]
+        'id',
+        "date_reported", 
+        "type_of_violation", 
+        "fd_how_many_removed", 
+        "fd_alternative_place", 
+        "fd_alternative_place_description", 
+        "ep_what_kind", 
+        "ep_source",
+        "ep_source_description",
+        "ep_num_people_exposed", 
+        "ep_who_is_responsible",
 
-    def get_victims(self, case):
-        vctms = case.victims.all()
-        return VictimSerializer(instance=vctms, many=True).data
+        "ll_assests_lost", 
+        "ll_who_is_responsible",
+        "ll_families_affected", 
+
+        "dc_how_many_graves", 
+        "dc_who_desecrated_them",
+
+        "ti_type", 
+        "ti_other",
+        "ti_groups_affected", 
+        "ti_who_did_this", 
+        "ti_company_involved",
+        "ti_the_reason", 
+
+        "rf_company_involved",
+
+        "la_company_involved",
+
+        "fu_company_involved", 
+
+        "cl_company_involved",
+        "cl_number_of_children", 
+
+        "es_which_resource",
+        "es_who_is_smuggling", 
+        "es_company_involved", 
+
+        "sv_affected_people",
+        "sv_type", 
+        "sv_company_involved",
+        "sv_who_did_this",
+
+        "mk_groups_of_persons", 
+        "mk_number_of_people",
+        "mk_how_they_died", 
+        "mk_murder_other",
+        "mk_company_involved", 
+
+        "what_happened",
+
+        "reporter_phone", 
+        "reporter_address",
+        "reporter_email", 
+
+        "name_of_area", 
+        "village",
+        "chief", 
+        "ward_name",
+        "location",
+        "district", 
+        "province", 
+        "latitude", 
+        "longitude",
+
+        "identity_verification", 
+        "evidence_files",
+        "collection_vp", 
+        "media_files",
+        ]
 
 
 reportcase_detail_url = HyperlinkedIdentityField(
@@ -66,34 +110,81 @@ reportcase_detail_url = HyperlinkedIdentityField(
 
 class ReportedCaseDetailSerializer(ModelSerializer):
     url = reportcase_detail_url
-    user = UserDetailSerializer(read_only=True)
-
     class Meta:
         model = ReportedCase
         fields = [
             'url',
             'id',
-            'user',
-            "date_reported",
-            'company',
+            "date_reported", 
             "type_of_violation", 
-            "description_of_victims", 
-            # "names_of_vitims", 
-            # "victim_age", 
-            # "victim_gender", 
-            # "describe_gender", 
-            # "victim_phone_number",
-            # "victim_address", 
-            "description_of_perpetrator", 
-            "motivations_behind_incident", 
-            "what_happened", 
-            "how_it_happened",
-            "community_description",
-            "evidence_files", 
+            "fd_how_many_removed", 
+            "fd_alternative_place", 
+            "fd_alternative_place_description", 
+            "ep_what_kind", 
+            "ep_source",
+            "ep_source_description",
+            "ep_num_people_exposed", 
+            "ep_who_is_responsible",
+
+            "ll_assests_lost", 
+            "ll_who_is_responsible",
+            "ll_families_affected", 
+
+            "dc_how_many_graves", 
+            "dc_who_desecrated_them",
+
+            "ti_type", 
+            "ti_other",
+            "ti_groups_affected", 
+            "ti_who_did_this", 
+            "ti_company_involved",
+            "ti_the_reason", 
+
+            "rf_company_involved",
+
+            "la_company_involved",
+
+            "fu_company_involved", 
+
+            "cl_company_involved",
+            "cl_number_of_children", 
+
+            "es_which_resource",
+            "es_who_is_smuggling", 
+            "es_company_involved", 
+
+            "sv_affected_people",
+            "sv_type", 
+            "sv_company_involved",
+            "sv_who_did_this",
+
+            "mk_groups_of_persons", 
+            "mk_number_of_people",
+            "mk_how_they_died", 
+            "mk_murder_other",
+            "mk_company_involved", 
+
+            "what_happened",
+
+            "reporter_phone", 
+            "reporter_address",
+            "reporter_email", 
+
+            "name_of_area", 
+            "village",
+            "chief", 
+            "ward_name",
             "location",
+            "district", 
+            "province", 
             "latitude", 
             "longitude",
+
             "identity_verification", 
+            "evidence_files",
+            "collection_vp", 
+            "media_files",
+
             "active",
             'updated',
             'timestamp'
@@ -101,8 +192,6 @@ class ReportedCaseDetailSerializer(ModelSerializer):
 
 class ReportedCaseListSerializer(serializers.ModelSerializer):
     url = reportcase_detail_url
-    victims = VictimSerializer(many=True)
-    user    =   UserDetailSerializer(read_only=True)
     delete_url = HyperlinkedIdentityField(
         view_name='reportcase-api:delete',
         lookup_field='id'#or primary key <pk>
@@ -110,42 +199,82 @@ class ReportedCaseListSerializer(serializers.ModelSerializer):
     class Meta:
         model = ReportedCase
         fields = [
-            "victims",
-            "experiment",
             'url',
-            'user',
             'id',
             'delete_url',
-            'company',
             "date_reported", 
             "type_of_violation", 
-            "description_of_victims", 
-            # "names_of_vitims", 
-            # "victim_age", 
-            # "victim_gender", 
-            # "describe_gender", 
-            # "victim_phone_number",
-            # "victim_address", 
-            "description_of_perpetrator", 
-            "motivations_behind_incident", 
-            "what_happened", 
-            "how_it_happened",
-            "community_description",
-            "evidence_files", 
+            "fd_how_many_removed", 
+            "fd_alternative_place", 
+            "fd_alternative_place_description", 
+            "ep_what_kind", 
+            "ep_source",
+            "ep_source_description",
+            "ep_num_people_exposed", 
+            "ep_who_is_responsible",
+
+            "ll_assests_lost", 
+            "ll_who_is_responsible",
+            "ll_families_affected", 
+
+            "dc_how_many_graves", 
+            "dc_who_desecrated_them",
+
+            "ti_type", 
+            "ti_other",
+            "ti_groups_affected", 
+            "ti_who_did_this", 
+            "ti_company_involved",
+            "ti_the_reason", 
+
+            "rf_company_involved",
+
+            "la_company_involved",
+
+            "fu_company_involved", 
+
+            "cl_company_involved",
+            "cl_number_of_children", 
+
+            "es_which_resource",
+            "es_who_is_smuggling", 
+            "es_company_involved", 
+
+            "sv_affected_people",
+            "sv_type", 
+            "sv_company_involved",
+            "sv_who_did_this",
+
+            "mk_groups_of_persons", 
+            "mk_number_of_people",
+            "mk_how_they_died", 
+            "mk_murder_other",
+            "mk_company_involved", 
+
+            "what_happened",
+
+            "reporter_phone", 
+            "reporter_address",
+            "reporter_email", 
+
+            "name_of_area", 
+            "village",
+            "chief", 
+            "ward_name",
             "location",
+            "district", 
+            "province", 
             "latitude", 
             "longitude",
+
             "identity_verification", 
+            "evidence_files",
+            "collection_vp", 
+            "media_files",
             "active",
             'updated',
             'timestamp'
         ]
-
-        
-    def get_victims(self, case):
-            vctms = case.victims.all()
-            return VictimSerializer(instance=vctms, many=True).data
-
 
 
 # def create(self, validated_data):
