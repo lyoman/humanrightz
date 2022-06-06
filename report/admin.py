@@ -38,10 +38,6 @@ class ReportedCaseModelAdmin(admin.ModelAdmin):
         "cl_company_involved",
         "cl_number_of_children", 
 
-        "es_which_resource",
-        "es_who_is_smuggling", 
-        "es_company_involved", 
-
         "sv_affected_people",
         "sv_type", 
         "sv_company_involved",
@@ -69,13 +65,10 @@ class ReportedCaseModelAdmin(admin.ModelAdmin):
         "latitude", 
         "longitude",
 
-        "identity_verification", 
-        "evidence_files",
         "collection_vp", 
         "media_files",
 
         "active",
-
         "updated", 
         "timestamp"
         ]

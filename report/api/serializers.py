@@ -65,10 +65,6 @@ class ReportedCaseCreateUpdateSerializer(ModelSerializer):
         "cl_company_involved",
         "cl_number_of_children", 
 
-        "es_which_resource",
-        "es_who_is_smuggling", 
-        "es_company_involved", 
-
         "sv_affected_people",
         "sv_type", 
         "sv_company_involved",
@@ -96,8 +92,6 @@ class ReportedCaseCreateUpdateSerializer(ModelSerializer):
         "latitude", 
         "longitude",
 
-        "identity_verification", 
-        "evidence_files",
         "collection_vp", 
         "media_files",
         ]
@@ -149,10 +143,6 @@ class ReportedCaseDetailSerializer(ModelSerializer):
             "cl_company_involved",
             "cl_number_of_children", 
 
-            "es_which_resource",
-            "es_who_is_smuggling", 
-            "es_company_involved", 
-
             "sv_affected_people",
             "sv_type", 
             "sv_company_involved",
@@ -180,8 +170,6 @@ class ReportedCaseDetailSerializer(ModelSerializer):
             "latitude", 
             "longitude",
 
-            "identity_verification", 
-            "evidence_files",
             "collection_vp", 
             "media_files",
 
@@ -236,10 +224,6 @@ class ReportedCaseListSerializer(serializers.ModelSerializer):
             "cl_company_involved",
             "cl_number_of_children", 
 
-            "es_which_resource",
-            "es_who_is_smuggling", 
-            "es_company_involved", 
-
             "sv_affected_people",
             "sv_type", 
             "sv_company_involved",
@@ -267,8 +251,6 @@ class ReportedCaseListSerializer(serializers.ModelSerializer):
             "latitude", 
             "longitude",
 
-            "identity_verification", 
-            "evidence_files",
             "collection_vp", 
             "media_files",
             "active",
